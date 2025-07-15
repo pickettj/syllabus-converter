@@ -1,0 +1,339 @@
+/* ===== COLLAPSIBLE SYLLABUS STYLES =====
+   Blue-grey color palette for academic syllabi
+   Designed to work with hierarchical content structure:
+   - .section = main collapsible sections (## headings in markdown)
+   - .subsection = nested collapsible sections (### headings in markdown)
+   - .session = individual content blocks (#### headings in markdown)
+*/
+
+/* ===== COLOR PALETTE =====
+   Primary: #36454f (Dark Blue-Grey)
+   Secondary: #536872, #536878 (Medium Blue-Grey)
+   Light: #708090, #6e7f80 (Light Blue-Grey)
+   Backgrounds: #ffffff, #f8f9fa, #fdfdfd
+*/
+
+/* ===== RESET & BASE STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', serif;
+    line-height: 1.6;
+    color: #36454f;
+    background: linear-gradient(135deg, #708090 0%, #6e7f80 100%);
+    min-height: 100vh;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgba(54, 69, 79, 0.3);
+    min-height: 100vh;
+}
+
+/* ===== HEADER STYLES ===== */
+header {
+    background: linear-gradient(135deg, #36454f 0%, #536872 100%);
+    color: #ffffff;
+    padding: 2rem;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-style: italic;
+}
+
+/* ===== CONTENT WRAPPER ===== */
+.content {
+    padding: 2rem;
+}
+
+/* ===== MAIN COLLAPSIBLE SECTIONS (## headings) ===== */
+.section {
+    margin-bottom: 1.5rem;
+    border: 1px solid #6e7f80;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* Section headers - clickable to expand/collapse */
+.section-header {
+    background: linear-gradient(135deg, #708090 0%, #6e7f80 100%);
+    color: #ffffff;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.section-header:hover {
+    background: linear-gradient(135deg, #536872 0%, #536878 100%);
+}
+
+.section-header.active {
+    background: linear-gradient(135deg, #36454f 0%, #536872 100%);
+}
+
+/* Toggle icon (▼/▲) in section headers */
+.toggle-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.section-header.active .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Collapsible content area for sections */
+.section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #ffffff;
+}
+
+/* When active class is added, content expands */
+.section-content.active {
+    max-height: 2000px;
+    transition: max-height 0.5s ease-in;
+}
+
+.section-inner {
+    padding: 1.5rem;
+}
+
+/* ===== NESTED COLLAPSIBLE SUBSECTIONS (### headings) ===== */
+.subsection {
+    margin-bottom: 1.5rem;
+    border-left: 3px solid #708090;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Subsection headers - lighter styling than main sections */
+.subsection-header {
+    background: #f8f9fa;
+    color: #36454f;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.subsection-header:hover {
+    background: #e9ecef;
+}
+
+.subsection-header.active {
+    background: #708090;
+    color: #ffffff;
+}
+
+/* Collapsible content for subsections */
+.subsection-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.subsection-content.active {
+    max-height: 1500px;
+    transition: max-height 0.4s ease-in;
+}
+
+.subsection-inner {
+    padding: 1rem;
+    background: #fdfdfd;
+}
+
+/* ===== CONTENT BLOCKS (#### headings) ===== */
+.session {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(54, 69, 79, 0.1);
+}
+
+.session h4 {
+    color: #536872;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.session-type {
+    font-weight: bold;
+    color: #36454f;
+    margin-bottom: 0.3rem;
+}
+
+/* ===== SPECIALIZED CONTENT STYLES ===== */
+.core-questions {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #536872;
+}
+
+.core-questions h4 {
+    color: #36454f;
+    margin-bottom: 0.5rem;
+}
+
+.deadlines {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.deadlines h4 {
+    color: #c53030;
+    margin-bottom: 0.5rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-card {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #708090;
+}
+
+.info-card h4 {
+    color: #36454f;
+    margin-bottom: 0.5rem;
+}
+
+.grade-distribution {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.grade-item {
+    background: #708090;
+    color: white;
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+/* ===== LIST STYLING ===== */
+/* Reading lists with specific class */
+.reading-list {
+    margin-top: 0.5rem;
+}
+
+.reading-list ul {
+    margin-left: 1.5rem;
+}
+
+.reading-list li {
+    margin-bottom: 0.3rem;
+}
+
+/* General lists in subsection content */
+.subsection-inner ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subsection-inner li {
+    margin-bottom: 0.3rem;
+}
+
+.subsection-inner ol {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subsection-inner ol li {
+    margin-bottom: 0.3rem;
+}
+
+/* ===== LINKS ===== */
+a {
+    color: #536872;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #36454f;
+    text-decoration: underline;
+}
+
+/* ===== NOTES AND MISC ===== */
+.note {
+    font-style: italic;
+    color: #536872;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .container {
+        margin: 0;
+        box-shadow: none;
+    }
+    
+    header {
+        padding: 1.5rem 1rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .content {
+        padding: 1rem;
+    }
+    
+    .section-header {
+        padding: 0.8rem 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
