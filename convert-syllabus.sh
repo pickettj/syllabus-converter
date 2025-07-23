@@ -107,7 +107,7 @@ validate_paths() {
 
 # Function to select markdown file using fzf (like fow but more targeted)
 select_markdown_file() {
-    echo -e "${BLUE}Searching for markdown files...${NC}"
+    echo -e "${BLUE}Searching for markdown files...${NC}" >&2  # <-- ADD >&2 HERE
 
     # Search in common directories, prioritizing syllabus-related locations
     local search_dirs=(
@@ -127,7 +127,7 @@ select_markdown_file() {
     done
 
     if [ ${#find_args[@]} -eq 0 ]; then
-        echo -e "${YELLOW}No standard directories found, searching current directory...${NC}"
+        echo -e "${YELLOW}No standard directories found, searching current directory...${NC}" >&2
         find_args=(".")
     fi
 
@@ -139,7 +139,7 @@ select_markdown_file() {
             --header="Select your syllabus markdown file")
 
     if [ -z "$selected_file" ]; then
-        echo -e "${RED}✗ No file selected${NC}"
+        echo -e "${RED}✗ No file selected${NC}" >&2  # <-- ADD >&2 HERE TOO
         exit 1
     fi
 
@@ -148,7 +148,7 @@ select_markdown_file() {
 
 # Function to select output directory using fzf (like fdw but more targeted)
 select_output_directory() {
-    echo -e "${BLUE}Searching for output directories...${NC}"
+    echo -e "${BLUE}Searching for output directories...${NC}" >&2
 
     # Search in common output locations
     local search_dirs=(
@@ -168,9 +168,9 @@ select_output_directory() {
     done
 
     if [ ${#find_args[@]} -eq 0 ]; then
-        echo -e "${YELLOW}No standard directories found, using current directory...${NC}"
-        find_args=(".")
-    fi
+            echo -e "${YELLOW}No standard directories found, using current directory...${NC}" >&2  # Add >&2 here
+            find_args=(".")
+        fi
 
     local selected_dir
     selected_dir=$(find "${find_args[@]}" -type d 2>/dev/null | \
@@ -180,7 +180,7 @@ select_output_directory() {
             --header="Select where to save the generated files")
 
     if [ -z "$selected_dir" ]; then
-        echo -e "${RED}✗ No directory selected${NC}"
+        echo -e "${RED}✗ No directory selected${NC}" >&2
         exit 1
     fi
 
@@ -189,7 +189,7 @@ select_output_directory() {
 
 # Function to select theme
 select_theme() {
-    echo -e "${BLUE}Available themes:${NC}"
+    echo -e "${BLUE}Available themes:${NC}" >&2
 
     local selected_theme
     selected_theme=$(find "$THEMES_DIR" -name "*.css" 2>/dev/null | \
@@ -200,7 +200,7 @@ select_theme() {
             --header="Select a color theme for your syllabus")
 
     if [ -z "$selected_theme" ]; then
-        echo -e "${RED}✗ No theme selected${NC}"
+        echo -e "${RED}✗ No theme selected${NC}" >&2
         exit 1
     fi
 
@@ -215,6 +215,7 @@ convert_to_html() {
 
     echo -e "${BLUE}Converting markdown to HTML...${NC}"
 
+
     # Run pandoc with our custom template
     if pandoc "$source_file" \
         -o "$output_file" \
@@ -222,8 +223,7 @@ convert_to_html() {
         --standalone \
         --toc \
         --toc-depth=3 \
-        --metadata-file=<(echo "date: $(date +'%B %Y')") \
-        2>/dev/null; then
+        --metadata-file=<(echo "date: $(date +'%B %Y')"); then
 
         echo -e "${GREEN}✓ HTML generated: $output_file${NC}"
         return 0

@@ -24,261 +24,28 @@
             </header>
 
             <div class="content">
-                <!-- This is where the magic happens - pandoc inserts converted markdown here -->
+                <!-- Pandoc body content goes here -->
                 $body$
             </div>
         </div>
 
-        <!-- JavaScript for interactivity -->
+        <!-- Load the interactive JavaScript -->
         <script src="syllabus-interactive.js"></script>
-        $for(include-after)$ $include-after$ $endfor$
 
-        <!-- Custom script to transform pandoc's output into collapsible structure -->
+        <!-- Simple initialization script -->
         <script>
-            // Transform pandoc's standard HTML into our collapsible structure
             document.addEventListener("DOMContentLoaded", function () {
-                transformToCollapsible();
-            });
-
-            function transformToCollapsible() {
-                const content = document.querySelector(".content");
-                if (!content) return;
-
-                // Get all headings (h1, h2, h3, h4, h5, h6)
-                const headings = content.querySelectorAll(
-                    "h1, h2, h3, h4, h5, h6",
-                );
-                const elements = Array.from(content.children);
-
-                // Group content by heading levels
-                const sections = [];
-                let currentSection = null;
-                let currentSubsection = null;
-
-                elements.forEach((element) => {
-                    const tagName = element.tagName.toLowerCase();
-
-                    if (tagName === "h1") {
-                        // H1 is the main title, skip it (already in header)
-                        element.style.display = "none";
-                        return;
-                    }
-
-                    if (tagName === "h2") {
-                        // Start new main section
-                        currentSection = {
-                            level: 2,
-                            title: element.textContent,
-                            element: element,
-                            content: [],
-                            subsections: [],
-                        };
-                        sections.push(currentSection);
-                        currentSubsection = null;
-                    } else if (tagName === "h3") {
-                        // Start new subsection
-                        if (currentSection) {
-                            currentSubsection = {
-                                level: 3,
-                                title: element.textContent,
-                                element: element,
-                                content: [],
-                            };
-                            currentSection.subsections.push(currentSubsection);
-                        }
-                    } else if (tagName === "h4") {
-                        // H4 and below are content within sections/subsections
-                        if (currentSubsection) {
-                            currentSubsection.content.push(element);
-                        } else if (currentSection) {
-                            currentSection.content.push(element);
-                        }
-                    } else {
-                        // Regular content
-                        if (currentSubsection) {
-                            currentSubsection.content.push(element);
-                        } else if (currentSection) {
-                            currentSection.content.push(element);
-                        }
-                    }
-                });
-
-                // Clear the content and rebuild with collapsible structure
-                content.innerHTML = "";
-
-                sections.forEach((section) => {
-                    const sectionDiv = createCollapsibleSection(section);
-                    content.appendChild(sectionDiv);
-                });
-            }
-
-            function createCollapsibleSection(section) {
-                // Create main section wrapper
-                const sectionDiv = document.createElement("div");
-                sectionDiv.className = "section";
-
-                // Create section header
-                const headerDiv = document.createElement("div");
-                headerDiv.className = "section-header";
-                headerDiv.setAttribute("onclick", "toggleSection(this)");
-                headerDiv.setAttribute("tabindex", "0");
-
-                const titleSpan = document.createElement("span");
-                titleSpan.textContent = section.title;
-
-                const iconSpan = document.createElement("span");
-                iconSpan.className = "toggle-icon";
-                iconSpan.textContent = "▼";
-
-                headerDiv.appendChild(titleSpan);
-                headerDiv.appendChild(iconSpan);
-
-                // Create section content wrapper
-                const contentDiv = document.createElement("div");
-                contentDiv.className = "section-content";
-
-                const innerDiv = document.createElement("div");
-                innerDiv.className = "section-inner";
-
-                // Add direct content (not in subsections)
-                section.content.forEach((element) => {
-                    innerDiv.appendChild(element);
-                });
-
-                // Add subsections
-                section.subsections.forEach((subsection) => {
-                    const subsectionDiv =
-                        createCollapsibleSubsection(subsection);
-                    innerDiv.appendChild(subsectionDiv);
-                });
-
-                contentDiv.appendChild(innerDiv);
-                sectionDiv.appendChild(headerDiv);
-                sectionDiv.appendChild(contentDiv);
-
-                return sectionDiv;
-            }
-
-            function createCollapsibleSubsection(subsection) {
-                // Create subsection wrapper
-                const subsectionDiv = document.createElement("div");
-                subsectionDiv.className = "subsection";
-
-                // Create subsection header
-                const headerDiv = document.createElement("div");
-                headerDiv.className = "subsection-header";
-                headerDiv.setAttribute("onclick", "toggleSubsection(this)");
-                headerDiv.setAttribute("tabindex", "0");
-
-                const titleSpan = document.createElement("span");
-                titleSpan.textContent = subsection.title;
-
-                const iconSpan = document.createElement("span");
-                iconSpan.className = "toggle-icon";
-                iconSpan.textContent = "▼";
-
-                headerDiv.appendChild(titleSpan);
-                headerDiv.appendChild(iconSpan);
-
-                // Create subsection content wrapper
-                const contentDiv = document.createElement("div");
-                contentDiv.className = "subsection-content";
-
-                const innerDiv = document.createElement("div");
-                innerDiv.className = "subsection-inner";
-
-                // Add subsection content
-                subsection.content.forEach((element) => {
-                    // Transform h4 elements into session blocks
-                    if (element.tagName.toLowerCase() === "h4") {
-                        const sessionDiv = document.createElement("div");
-                        sessionDiv.className = "session";
-
-                        const sessionTitle = document.createElement("h4");
-                        sessionTitle.textContent = element.textContent;
-                        sessionDiv.appendChild(sessionTitle);
-
-                        innerDiv.appendChild(sessionDiv);
-                    } else {
-                        // Check if this should be part of the last session
-                        const lastChild = innerDiv.lastElementChild;
-                        if (
-                            lastChild &&
-                            lastChild.classList.contains("session")
-                        ) {
-                            lastChild.appendChild(element);
-                        } else {
-                            innerDiv.appendChild(element);
-                        }
-                    }
-                });
-
-                contentDiv.appendChild(innerDiv);
-                subsectionDiv.appendChild(headerDiv);
-                subsectionDiv.appendChild(contentDiv);
-
-                return subsectionDiv;
-            }
-
-            // Special handling for certain content types
-            function enhanceContent() {
-                // Add reading-list class to lists that follow "Reading:" or "Readings:"
-                const content = document.querySelector(".content");
-                const strongElements = content.querySelectorAll("strong");
-
-                strongElements.forEach((strong) => {
-                    const text = strong.textContent.toLowerCase();
-                    if (text.includes("reading") && text.includes(":")) {
-                        const nextElement =
-                            strong.parentElement.nextElementSibling;
-                        if (
-                            nextElement &&
-                            nextElement.tagName.toLowerCase() === "ul"
-                        ) {
-                            const wrapper = document.createElement("div");
-                            wrapper.className = "reading-list";
-                            nextElement.parentNode.insertBefore(
-                                wrapper,
-                                nextElement,
-                            );
-                            wrapper.appendChild(nextElement);
-                        }
-                    }
-                });
-
-                // Enhance deadline content
-                const deadlineKeywords = [
-                    "deadline",
-                    "due date",
-                    "important dates",
-                ];
-                content.querySelectorAll("h3, h4").forEach((heading) => {
-                    const text = heading.textContent.toLowerCase();
-                    if (
-                        deadlineKeywords.some((keyword) =>
-                            text.includes(keyword),
-                        )
-                    ) {
-                        let nextElement = heading.nextElementSibling;
-                        while (
-                            nextElement &&
-                            !nextElement.tagName.match(/^h[1-6]$$/i)
-                        ) {
-                            if (nextElement.tagName.toLowerCase() === "ul") {
-                                nextElement.classList.add("deadlines");
-                            }
-                            nextElement = nextElement.nextElementSibling;
-                        }
-                    }
-                });
-            }
-
-            // Run content enhancement after transformation
-            document.addEventListener("DOMContentLoaded", function () {
-                setTimeout(() => {
-                    enhanceContent();
-                }, 100);
+                console.log("DOM loaded, starting transformation...");
+                if (typeof transformPandocToCollapsible === "function") {
+                    transformPandocToCollapsible();
+                } else {
+                    console.error(
+                        "transformPandocToCollapsible function not found",
+                    );
+                }
             });
         </script>
+
+        $for(include-after)$ $include-after$ $endfor$
     </body>
 </html>
