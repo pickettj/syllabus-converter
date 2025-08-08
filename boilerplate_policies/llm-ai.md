@@ -1,32 +1,8 @@
+# Large Language Models (AI)
 
 
 
-
-
-
-### Learning Outcomes
-
-The ultimate goal of this course is to develop *critical thinking skills* and *habits of mind* for evaluating the relationship between primary sources (data), fact, and analytical implications: How do we know what we think we know? What is a fact? When everyone has an opinion, what is the difference between a more compelling and less compelling argument?
-
-This may seem vague, and to some degree this is what all humanities courses purport to do. What about the "hard skills" you can put on your resume?
-
-#### Analytical Writing
-
-Reports of the demise of analytical writing are greatly exaggerated: for all the ways AI is reshaping the way we write (see below), your ability to draw upon facts to advance an argument-driven interpetation of those facts (in print or out loud; in an academic essay or on social media; to a friend or to your supervisor) is more valuable than ever before.
-
-#### "Knowing Stuff"
-
-Can you name all of the US state capitals? Your p̶a̶r̶e̶n̶t̶s̶ grandparents probably could, or memorized them in school. As more and more information is at our disposal on our smartphones, less and less of it is readily available in our heads. For the most part, that is as it should be: pedagogy evolves along with our tools.
-
-However... it is still important to have some baseline of knowledge in your active memory. Even though you can look up a fact in a matter of seconds, in practice much of the time you will not do so: when you are chatting on the phone, as you quickly peruse an article, when you don't know what you don't know. The facts at your immediate disposal in your active memory shape your understanding of the world around you even when you don't realize it.
-
-Therefore, you will be expected to learn some stuff — even (gasp) memorize a few big-picture facts — relevant to the subjectmatter of this course.
-
-
-
-### Artificial Intelligence / Large Language Models
-
-#### Philosophical Approach
+## Philosophical Approach
 
 What you refer to as 'AI' is more specifically a Large Language Model or LLM: essentially, these systems are trained on vast corpora of human-produced text to identify statistical patterns in language. LLMs can generate remarkably coherent responses to queries, though they don't truly 'understand' content the way humans do. This potent technology is transforming every field, and history is no exception.
 
@@ -34,7 +10,9 @@ In history classes of yore (i.e., just several years ago), many collegiate histo
 
 Especially in the short term, this scale of change is threatening, and creates new challenges of intellectual honesty and course policies: How do we differentiate between your intellectual labor and that of the LLM? What is the point of artificially separating you from a tool that you will have in the "real world"?  These questions have forced humanists and social scientists (historians are both) to reconsider what is at the core of the field: a critical assessment of what constitutes historical evidence, and making sense of that evidence through analytical reasoning. AI shifts the focus away from the *products* of these pursuits and toward *research skills* and *habits of mind*: the fact that a machine can now competently produce an analytical essay with no grammatical errors and based on primary sources makes an ability to critically evaluate those products more important than ever.
 
-#### AI Policy
+
+
+### LLM Policies
 
 This course embraces the "broad use" level of AI [policy specified by the Center for Teaching and Learning](https://teaching.pitt.edu/resources/teaching-with-generative-ai/):
 
@@ -46,7 +24,9 @@ There are no easy answers to these questions, and expectations will vary widely 
 
 Your instructor is bound by these same principles when preparing course material and offering feedback. I may use LLM assistance to help format slides and to reconfigure the presentation of my feedback. However, I will never feed any of your material into an LLM not [approved for broad use by Pitt](https://www.technology.pitt.edu/ai) (i.e., to avoid privacy concerns); the content and phrasing of all feedback will always come directly from me; and I will never use an LLM to determine, or even suggest, a grade.
 
-#### LLMs as Assistants for Learning History
+
+
+## LLMs as Assistants for Learning History
 
 The following are some legitimate use cases (and words of caution) for using AI in the field of history:
 
@@ -55,16 +35,6 @@ The following are some legitimate use cases (and words of caution) for using AI 
 - *Identify stylistic / grammatical / syntactical errors in an essay*: The LLMs can identify the ways your writing is different or similar to a massive body of published work, which *often* equates to spotting legitimate errors. You can learn from this tool, so use it.
   - *Caution*: Remember that you can ask an interactive chatbot for further explanation of a suggestion. If you are blindly adopting writing suggestions without learning the underlying principle, you will reproduce errors.
 - *Help me develop a coding tool*: With AI
-
-
-
-
-
-
-
-
-
-
 
 
 

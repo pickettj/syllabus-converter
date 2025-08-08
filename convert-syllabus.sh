@@ -247,7 +247,7 @@ convert_to_pdf() {
         # Use LaTeX engine
         if pandoc "$source_file" \
             -o "$pdf_file" \
-            --pdf-engine=pdflatex \
+            --pdf-engine=xelatex \
             --variable=geometry:margin=1in \
             --metadata-file=<(echo "date: $(date +'%B %Y')") \
             2>/dev/null; then

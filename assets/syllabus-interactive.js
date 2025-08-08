@@ -1,11 +1,12 @@
 /* ===== COLLAPSIBLE SYLLABUS JAVASCRIPT =====
    Functions to handle expand/collapse functionality for hierarchical content
 
-   REQUIRED HTML STRUCTURE:
+   UPDATED TO HANDLE 5-LEVEL HIERARCHY:
    - .section-header + .section-content for main sections (## headings)
    - .subsection-header + .subsection-content for nested sections (### headings)
+   - .subsubsection-header + .subsubsection-content for deeper nesting (#### headings)
+   - .session elements for individual content blocks (##### headings)
    - .toggle-icon elements within headers for visual feedback
-   - onclick="toggleSection(this)" or onclick="toggleSubsection(this)" on headers
 */
 
 /**
@@ -28,8 +29,40 @@ function toggleSection(header) {
 
 /**
  * Toggles the visibility of a subsection (### headings in markdown)
+ * When expanding, also expands all nested sub-subsections
  */
 function toggleSubsection(header) {
+  const content = header.nextElementSibling;
+  const icon = header.querySelector(".toggle-icon");
+
+  if (content.classList.contains("active")) {
+    content.classList.remove("active");
+    header.classList.remove("active");
+    icon.textContent = "▼";
+  } else {
+    content.classList.add("active");
+    header.classList.add("active");
+    icon.textContent = "▲";
+
+    // Auto-expand all nested sub-subsections when expanding a subsection
+    const nestedSubSubsections = content.querySelectorAll(
+      ".subsubsection-header:not(.active)",
+    );
+    nestedSubSubsections.forEach((subHeader) => {
+      const subContent = subHeader.nextElementSibling;
+      const subIcon = subHeader.querySelector(".toggle-icon");
+
+      subContent.classList.add("active");
+      subHeader.classList.add("active");
+      subIcon.textContent = "▲";
+    });
+  }
+}
+
+/**
+ * Toggles the visibility of a sub-subsection (#### headings in markdown)
+ */
+function toggleSubSubsection(header) {
   const content = header.nextElementSibling;
   const icon = header.querySelector(".toggle-icon");
 
@@ -69,6 +102,7 @@ function transformPandocToCollapsible() {
   const sections = [];
   let currentSection = null;
   let currentSubsection = null;
+  let currentSubSubsection = null;
 
   elements.forEach((element, index) => {
     const tagName = element.tagName.toLowerCase();
@@ -80,7 +114,17 @@ function transformPandocToCollapsible() {
     console.log(`Element ${index}: ${tagName} - ${preview}`);
 
     if (tagName === "h1") {
-      // H1 is the main title, skip it (already in header)
+      // Use H1 for page title and header
+      document.title = element.textContent;
+      const header = document.querySelector("header h1");
+      if (header) {
+        header.textContent = element.textContent;
+      } else {
+        // Create title if header doesn't have one
+        const headerTitle = document.createElement("h1");
+        headerTitle.textContent = element.textContent;
+        document.querySelector("header").appendChild(headerTitle);
+      }
       element.style.display = "none";
       return;
     }
@@ -96,6 +140,7 @@ function transformPandocToCollapsible() {
       };
       sections.push(currentSection);
       currentSubsection = null;
+      currentSubSubsection = null;
       console.log("Created section:", currentSection.title);
     } else if (tagName === "h3") {
       // Start new subsection
@@ -105,20 +150,77 @@ function transformPandocToCollapsible() {
           title: element.textContent,
           element: element,
           content: [],
+          subsubsections: [],
         };
         currentSection.subsections.push(currentSubsection);
+        currentSubSubsection = null;
         console.log("Created subsection:", currentSubsection.title);
       }
-    } else if (tagName === "h4" || tagName === "h5" || tagName === "h6") {
-      // H4+ are content within sections/subsections
+    } else if (tagName === "h4") {
+      // Start new sub-subsection
       if (currentSubsection) {
+        currentSubSubsection = {
+          level: 4,
+          title: element.textContent,
+          element: element,
+          content: [],
+          sessions: [],
+        };
+        currentSubsection.subsubsections.push(currentSubSubsection);
+        console.log("Created sub-subsection:", currentSubSubsection.title);
+      } else if (currentSection) {
+        // If no subsection, add directly to section
+        currentSubSubsection = {
+          level: 4,
+          title: element.textContent,
+          element: element,
+          content: [],
+          sessions: [],
+        };
+        currentSection.content.push(currentSubSubsection);
+        console.log(
+          "Created sub-subsection in section:",
+          currentSubSubsection.title,
+        );
+      }
+    } else if (tagName === "h5") {
+      // H5 becomes a session within current sub-subsection
+      if (currentSubSubsection) {
+        const session = {
+          level: 5,
+          title: element.textContent,
+          element: element,
+          content: [],
+        };
+        currentSubSubsection.sessions.push(session);
+        console.log("Created session:", session.title);
+      }
+    } else if (tagName === "h6") {
+      // H6+ are content within sessions or sub-subsections
+      if (currentSubSubsection && currentSubSubsection.sessions.length > 0) {
+        const lastSession =
+          currentSubSubsection.sessions[
+            currentSubSubsection.sessions.length - 1
+          ];
+        lastSession.content.push(element);
+      } else if (currentSubSubsection) {
+        currentSubSubsection.content.push(element);
+      } else if (currentSubsection) {
         currentSubsection.content.push(element);
       } else if (currentSection) {
         currentSection.content.push(element);
       }
     } else {
       // Regular content (p, ul, div, etc.)
-      if (currentSubsection) {
+      if (currentSubSubsection && currentSubSubsection.sessions.length > 0) {
+        const lastSession =
+          currentSubSubsection.sessions[
+            currentSubSubsection.sessions.length - 1
+          ];
+        lastSession.content.push(element);
+      } else if (currentSubSubsection) {
+        currentSubSubsection.content.push(element);
+      } else if (currentSubsection) {
         currentSubsection.content.push(element);
       } else if (currentSection) {
         currentSection.content.push(element);
@@ -181,7 +283,13 @@ function createCollapsibleSection(section) {
 
   // Add direct content (not in subsections)
   section.content.forEach((element) => {
-    innerDiv.appendChild(element);
+    if (element.level === 4) {
+      // This is a sub-subsection that was added directly to section
+      const subSubsectionDiv = createCollapsibleSubSubsection(element);
+      innerDiv.appendChild(subSubsectionDiv);
+    } else {
+      innerDiv.appendChild(element);
+    }
   });
 
   // Add subsections
@@ -225,27 +333,15 @@ function createCollapsibleSubsection(subsection) {
   const innerDiv = document.createElement("div");
   innerDiv.className = "subsection-inner";
 
-  // Add subsection content
+  // Add direct content (not in sub-subsections)
   subsection.content.forEach((element) => {
-    // Transform h4 elements into session blocks
-    if (element.tagName.toLowerCase() === "h4") {
-      const sessionDiv = document.createElement("div");
-      sessionDiv.className = "session";
+    innerDiv.appendChild(element);
+  });
 
-      const sessionTitle = document.createElement("h4");
-      sessionTitle.textContent = element.textContent;
-      sessionDiv.appendChild(sessionTitle);
-
-      innerDiv.appendChild(sessionDiv);
-    } else {
-      // Check if this should be part of the last session
-      const lastChild = innerDiv.lastElementChild;
-      if (lastChild && lastChild.classList.contains("session")) {
-        lastChild.appendChild(element);
-      } else {
-        innerDiv.appendChild(element);
-      }
-    }
+  // Add sub-subsections
+  subsection.subsubsections.forEach((subsubsection) => {
+    const subSubsectionDiv = createCollapsibleSubSubsection(subsubsection);
+    innerDiv.appendChild(subSubsectionDiv);
   });
 
   contentDiv.appendChild(innerDiv);
@@ -253,6 +349,63 @@ function createCollapsibleSubsection(subsection) {
   subsectionDiv.appendChild(contentDiv);
 
   return subsectionDiv;
+}
+
+function createCollapsibleSubSubsection(subsubsection) {
+  // Create sub-subsection wrapper
+  const subSubsectionDiv = document.createElement("div");
+  subSubsectionDiv.className = "subsubsection";
+
+  // Create sub-subsection header
+  const headerDiv = document.createElement("div");
+  headerDiv.className = "subsubsection-header";
+  headerDiv.setAttribute("onclick", "toggleSubSubsection(this)");
+  headerDiv.setAttribute("tabindex", "0");
+
+  const titleSpan = document.createElement("span");
+  titleSpan.textContent = subsubsection.title;
+
+  const iconSpan = document.createElement("span");
+  iconSpan.className = "toggle-icon";
+  iconSpan.textContent = "▼";
+
+  headerDiv.appendChild(titleSpan);
+  headerDiv.appendChild(iconSpan);
+
+  // Create sub-subsection content wrapper
+  const contentDiv = document.createElement("div");
+  contentDiv.className = "subsubsection-content";
+
+  const innerDiv = document.createElement("div");
+  innerDiv.className = "subsubsection-inner";
+
+  // Add direct content (not in sessions)
+  subsubsection.content.forEach((element) => {
+    innerDiv.appendChild(element);
+  });
+
+  // Add sessions (H5 content)
+  subsubsection.sessions.forEach((session) => {
+    const sessionDiv = document.createElement("div");
+    sessionDiv.className = "session";
+
+    const sessionTitle = document.createElement("h5");
+    sessionTitle.textContent = session.title;
+    sessionDiv.appendChild(sessionTitle);
+
+    // Add session content
+    session.content.forEach((element) => {
+      sessionDiv.appendChild(element);
+    });
+
+    innerDiv.appendChild(sessionDiv);
+  });
+
+  contentDiv.appendChild(innerDiv);
+  subSubsectionDiv.appendChild(headerDiv);
+  subSubsectionDiv.appendChild(contentDiv);
+
+  return subSubsectionDiv;
 }
 
 function enhanceContent() {
@@ -278,7 +431,7 @@ function enhanceContent() {
 
   // Enhance deadline content
   const deadlineKeywords = ["deadline", "due date", "important dates"];
-  content.querySelectorAll("h3, h4").forEach((heading) => {
+  content.querySelectorAll("h3, h4, h5").forEach((heading) => {
     const text = heading.textContent.toLowerCase();
     if (deadlineKeywords.some((keyword) => text.includes(keyword))) {
       let nextElement = heading.nextElementSibling;
@@ -300,6 +453,9 @@ function collapseAllSections() {
   const allSubsections = document.querySelectorAll(
     ".subsection-content.active",
   );
+  const allSubSubsections = document.querySelectorAll(
+    ".subsubsection-content.active",
+  );
 
   allSections.forEach((section) => {
     const header = section.previousElementSibling;
@@ -309,6 +465,11 @@ function collapseAllSections() {
   allSubsections.forEach((subsection) => {
     const header = subsection.previousElementSibling;
     toggleSubsection(header);
+  });
+
+  allSubSubsections.forEach((subsubsection) => {
+    const header = subsubsection.previousElementSibling;
+    toggleSubSubsection(header);
   });
 }
 
@@ -319,6 +480,9 @@ function expandAllSections() {
   const allSubsections = document.querySelectorAll(
     ".subsection-content:not(.active)",
   );
+  const allSubSubsections = document.querySelectorAll(
+    ".subsubsection-content:not(.active)",
+  );
 
   allSections.forEach((section) => {
     const header = section.previousElementSibling;
@@ -328,6 +492,11 @@ function expandAllSections() {
   allSubsections.forEach((subsection) => {
     const header = subsection.previousElementSibling;
     toggleSubsection(header);
+  });
+
+  allSubSubsections.forEach((subsubsection) => {
+    const header = subsubsection.previousElementSibling;
+    toggleSubSubsection(header);
   });
 }
 
@@ -340,7 +509,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (
       target.classList.contains("section-header") ||
-      target.classList.contains("subsection-header")
+      target.classList.contains("subsection-header") ||
+      target.classList.contains("subsubsection-header")
     ) {
       if (
         event.key === "Enter" ||
@@ -352,8 +522,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (target.classList.contains("section-header")) {
           toggleSection(target);
-        } else {
+        } else if (target.classList.contains("subsection-header")) {
           toggleSubsection(target);
+        } else if (target.classList.contains("subsubsection-header")) {
+          toggleSubSubsection(target);
         }
       }
     }
