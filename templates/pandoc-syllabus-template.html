@@ -19,9 +19,12 @@
                 $endif$ $if(subtitle)$
                 <div class="subtitle">$subtitle$</div>
                 $endif$
-                <!-- Last updated date in small italics -->
-                <div class="last-updated">Last updated on $date$</div>
             </header>
+
+            <!-- Last updated date - positioned after header but before content -->
+            <div class="last-updated-wrapper">
+                <div class="last-updated">Last updated on $date$</div>
+            </div>
 
             <div class="content">
                 <!-- Pandoc body content goes here -->

@@ -87,6 +87,25 @@ h1 {
     z-index: 1;
 }
 
+/* ===== LAST UPDATED DATE STYLING ===== */
+.last-updated-wrapper {
+    background: #faf9f7;
+    padding: 0.5rem 2.5rem;
+    border-bottom: 1px solid #e0ddd8;
+}
+
+.last-updated {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #894128;
+    text-align: right;
+    opacity: 0.6;
+    font-family: "Crimson Text", "Times New Roman", serif;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+}
+
 /* ===== CONTENT WRAPPER ===== */
 .content {
     padding: 2.5rem;
@@ -488,6 +507,34 @@ em, i {
     color: #894128;
 }
 
+/* ===== PARAGRAPH SPACING ===== */
+p {
+    margin-bottom: 1rem;
+}
+
+p + p {
+    margin-top: 0.5rem;
+}
+
+/* Spacing within content areas */
+.section-inner p,
+.subsection-inner p,
+.subsubsection-inner p,
+.session p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+/* Extra spacing for paragraphs after headings */
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+    margin-top: 0.8rem;
+}
+
+/* Spacing between different content blocks */
+p + ul, p + ol, ul + p, ol + p {
+    margin-top: 0.8rem;
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
     .container {
@@ -503,6 +550,10 @@ em, i {
 
     h1 {
         font-size: 2.2rem;
+    }
+
+    .last-updated-wrapper {
+        padding: 0.5rem 1.5rem;
     }
 
     .content {
@@ -582,21 +633,4 @@ em, i {
     .section-content.active, .subsection-content.active, .subsubsection-content.active {
         display: block !important;
     }
-    /* Last updated date styling */
-    /* Last updated date styling */
-.last-updated-wrapper {
-    background: #faf9f7;
-    padding: 0.5rem 2.5rem;
-    border-bottom: 1px solid #e0ddd8;
-}
-
-.last-updated {
-    font-size: 0.85rem;
-    font-style: italic !important;
-    color: #894128;
-    text-align: right;
-    opacity: 0.6;
-    font-family: "Crimson Text", "Times New Roman", serif;
-
-}
 }
