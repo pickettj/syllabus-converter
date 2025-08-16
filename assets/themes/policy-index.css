@@ -1,0 +1,301 @@
+/* ===== POLICY INDEX STYLES =====
+   Card-based layout for policy directory
+   Color Palette:
+   - Orange: #FE7743 (primary accent, highlights)
+   - Dark Blue: #273F4F (text, headers, strong contrast)
+   - Medium Blue: #447D9B (links, secondary elements)
+   - Light Gray: #D7D7D7 (backgrounds, subtle accents)
+*/
+
+/* ===== RESET & BASE STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Georgia", "Times New Roman", serif;
+    line-height: 1.6;
+    color: #273F4F;
+    background: linear-gradient(135deg, #D7D7D7 0%, #ffffff 100%);
+    min-height: 100vh;
+}
+
+/* ===== MAIN CONTAINER ===== */
+body {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgba(39, 63, 79, 0.15);
+    min-height: 100vh;
+    border-left: 4px solid #FE7743;
+    border-right: 4px solid #FE7743;
+    position: relative;
+}
+
+/* ===== HEADER STYLES ===== */
+header#title-block-header {
+    background: linear-gradient(135deg, #273F4F 0%, #447D9B 100%);
+    color: #ffffff;
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+}
+
+header#title-block-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 20px,
+        rgba(254, 119, 67, 0.1) 20px,
+        rgba(254, 119, 67, 0.1) 22px
+    );
+    pointer-events: none;
+}
+
+h1.title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+    color: #FE7743 !important;
+}
+
+/* ===== INTRO TEXT ===== */
+.intro {
+    padding: 2rem 2.5rem 1rem;
+    font-size: 1.1rem;
+    text-align: center;
+    color: #447D9B;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+/* ===== POLICY GRID ===== */
+.policy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem 2.5rem 3rem;
+    margin-bottom: 2rem;
+}
+
+/* ===== POLICY CARDS ===== */
+.policy-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+    border: 2px solid #D7D7D7;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(39, 63, 79, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.policy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FE7743, #447D9B);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.policy-card:hover {
+    transform: translateY(-4px);
+    border-color: #FE7743;
+    box-shadow: 0 8px 24px rgba(254, 119, 67, 0.2);
+}
+
+.policy-card:hover::before {
+    opacity: 1;
+}
+
+/* ===== CARD LINKS ===== */
+.policy-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.policy-card a:hover {
+    text-decoration: none;
+}
+
+/* ===== CARD HEADINGS ===== */
+.policy-card h3 {
+    color: #273F4F;
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.policy-card:hover h3 {
+    color: #FE7743;
+}
+
+/* Add subtle icon or indicator */
+.policy-card::after {
+    content: '→';
+    position: absolute;
+    bottom: 1rem;
+    right: 1.5rem;
+    color: #447D9B;
+    font-size: 1.2rem;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.policy-card:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+    color: #FE7743;
+}
+
+/* ===== DATE STAMP ===== */
+.date-stamp {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 0.85rem;
+    color: #447D9B;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 1px solid #D7D7D7;
+    box-shadow: 0 2px 8px rgba(39, 63, 79, 0.1);
+    font-style: italic;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    body {
+        margin: 0;
+        box-shadow: none;
+        border-left: none;
+        border-right: none;
+        border-top: 4px solid #FE7743;
+    }
+
+    header#title-block-header {
+        padding: 2rem 1.5rem;
+    }
+
+    h1.title {
+        font-size: 2rem;
+    }
+
+    .intro {
+        padding: 1.5rem 1.5rem 1rem;
+        font-size: 1rem;
+    }
+
+    .policy-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem 1.5rem 2rem;
+    }
+
+    .policy-card {
+        padding: 1.2rem;
+    }
+
+    .policy-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .date-stamp {
+        position: static;
+        margin: 1rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    header#title-block-header {
+        padding: 1.5rem 1rem;
+    }
+
+    h1.title {
+        font-size: 1.8rem;
+    }
+
+    .policy-grid {
+        padding: 1rem;
+    }
+
+    .policy-card {
+        padding: 1rem;
+    }
+
+    .policy-card h3 {
+        font-size: 1.1rem;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background: white;
+        color: black;
+        border: none;
+        box-shadow: none;
+    }
+
+    header#title-block-header {
+        background: #273F4F !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .policy-grid {
+        display: block;
+    }
+
+    .policy-card {
+        display: block;
+        margin-bottom: 1rem;
+        page-break-inside: avoid;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+
+    .policy-card::before,
+    .policy-card::after {
+        display: none;
+    }
+
+    .date-stamp {
+        position: static;
+        text-align: right;
+        margin-top: 2rem;
+    }
+}
