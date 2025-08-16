@@ -223,7 +223,7 @@ convert_to_html() {
         --standalone \
         --toc \
         --toc-depth=3 \
-        --metadata-file=<(echo "date: $(date +'%B %Y')"); then
+        --metadata-file=<(echo "date: $(date +'%B %d, %Y')"); then
 
         echo -e "${GREEN}✓ HTML generated: $output_file${NC}"
         return 0

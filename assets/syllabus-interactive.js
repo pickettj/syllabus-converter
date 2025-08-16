@@ -1,13 +1,33 @@
 /* ===== COLLAPSIBLE SYLLABUS JAVASCRIPT =====
    Functions to handle expand/collapse functionality for hierarchical content
 
-   UPDATED TO HANDLE 5-LEVEL HIERARCHY:
+   UPDATED TO HANDLE 5-LEVEL HIERARCHY WITH INFINITE EXPANSION:
    - .section-header + .section-content for main sections (## headings)
    - .subsection-header + .subsection-content for nested sections (### headings)
    - .subsubsection-header + .subsubsection-content for deeper nesting (#### headings)
    - .session elements for individual content blocks (##### headings)
    - .toggle-icon elements within headers for visual feedback
 */
+
+/**
+ * Gets the actual scroll height of an element's content
+ */
+function getActualHeight(element) {
+  // Temporarily show the element to measure its natural height
+  const originalMaxHeight = element.style.maxHeight;
+  const originalOverflow = element.style.overflow;
+  
+  element.style.maxHeight = 'none';
+  element.style.overflow = 'visible';
+  
+  const height = element.scrollHeight;
+  
+  // Restore original styles
+  element.style.maxHeight = originalMaxHeight;
+  element.style.overflow = originalOverflow;
+  
+  return height;
+}
 
 /**
  * Toggles the visibility of a main section (## headings in markdown)
@@ -20,10 +40,22 @@ function toggleSection(header) {
     content.classList.remove("active");
     header.classList.remove("active");
     icon.textContent = "▼";
+    content.style.maxHeight = "0";
   } else {
     content.classList.add("active");
     header.classList.add("active");
     icon.textContent = "▲";
+    
+    // Calculate and set the actual required height
+    const actualHeight = getActualHeight(content);
+    content.style.maxHeight = actualHeight + "px";
+    
+    // After transition completes, set to auto for true infinite expansion
+    setTimeout(() => {
+      if (content.classList.contains("active")) {
+        content.style.maxHeight = "none";
+      }
+    }, 500); // Match CSS transition duration
   }
 }
 
@@ -39,6 +71,7 @@ function toggleSubsection(header) {
     content.classList.remove("active");
     header.classList.remove("active");
     icon.textContent = "▼";
+    content.style.maxHeight = "0";
   } else {
     content.classList.add("active");
     header.classList.add("active");
@@ -55,7 +88,30 @@ function toggleSubsection(header) {
       subContent.classList.add("active");
       subHeader.classList.add("active");
       subIcon.textContent = "▲";
+      
+      // Set height for nested sub-subsections
+      const subActualHeight = getActualHeight(subContent);
+      subContent.style.maxHeight = subActualHeight + "px";
+      
+      setTimeout(() => {
+        if (subContent.classList.contains("active")) {
+          subContent.style.maxHeight = "none";
+        }
+      }, 400);
     });
+    
+    // Calculate and set the actual required height for the subsection
+    // Wait a moment for nested elements to expand first
+    setTimeout(() => {
+      const actualHeight = getActualHeight(content);
+      content.style.maxHeight = actualHeight + "px";
+      
+      setTimeout(() => {
+        if (content.classList.contains("active")) {
+          content.style.maxHeight = "none";
+        }
+      }, 500);
+    }, 50);
   }
 }
 
@@ -70,10 +126,54 @@ function toggleSubSubsection(header) {
     content.classList.remove("active");
     header.classList.remove("active");
     icon.textContent = "▼";
+    content.style.maxHeight = "0";
   } else {
     content.classList.add("active");
     header.classList.add("active");
     icon.textContent = "▲";
+    
+    // Calculate and set the actual required height
+    const actualHeight = getActualHeight(content);
+    content.style.maxHeight = actualHeight + "px";
+    
+    // After transition completes, set to auto for true infinite expansion
+    setTimeout(() => {
+      if (content.classList.contains("active")) {
+        content.style.maxHeight = "none";
+      }
+    }, 400);
+  }
+  
+  // Update parent heights if needed
+  updateParentHeights(header);
+}
+
+/**
+ * Updates parent container heights when nested content changes
+ */
+function updateParentHeights(element) {
+  let parent = element.closest('.subsection-content, .section-content');
+  
+  while (parent && parent.classList.contains('active')) {
+    if (parent.style.maxHeight !== "none") {
+      const actualHeight = getActualHeight(parent);
+      parent.style.maxHeight = actualHeight + "px";
+      
+      // Set to auto after a brief delay
+      setTimeout(() => {
+        if (parent.classList.contains("active")) {
+          parent.style.maxHeight = "none";
+        }
+      }, 100);
+    }
+    
+    // Move to next parent level
+    const parentHeader = parent.previousElementSibling;
+    if (parentHeader) {
+      parent = parentHeader.closest('.subsection-content, .section-content');
+    } else {
+      break;
+    }
   }
 }
 
@@ -126,6 +226,11 @@ function transformPandocToCollapsible() {
         document.querySelector("header").appendChild(headerTitle);
       }
       element.style.display = "none";
+      return;
+    }
+
+    // Skip processing the last-updated wrapper - leave it as is
+    if (element.classList && element.classList.contains("last-updated-wrapper")) {
       return;
     }
 
@@ -241,11 +346,11 @@ function transformPandocToCollapsible() {
 
   console.log("Transformation complete");
 
-  // Auto-expand first section if it exists
-  const firstSection = document.querySelector(".section-header");
-  if (firstSection) {
-    toggleSection(firstSection);
-  }
+  // Auto-expand all main sections (## headings) by default
+  const allSectionHeaders = document.querySelectorAll(".section-header");
+  allSectionHeaders.forEach(header => {
+    toggleSection(header);
+  });
 
   // Run enhancement after transformation
   setTimeout(() => {
@@ -277,6 +382,7 @@ function createCollapsibleSection(section) {
   // Create section content wrapper
   const contentDiv = document.createElement("div");
   contentDiv.className = "section-content";
+  contentDiv.style.maxHeight = "0"; // Start collapsed
 
   const innerDiv = document.createElement("div");
   innerDiv.className = "section-inner";
@@ -329,6 +435,7 @@ function createCollapsibleSubsection(subsection) {
   // Create subsection content wrapper
   const contentDiv = document.createElement("div");
   contentDiv.className = "subsection-content";
+  contentDiv.style.maxHeight = "0"; // Start collapsed
 
   const innerDiv = document.createElement("div");
   innerDiv.className = "subsection-inner";
@@ -375,6 +482,7 @@ function createCollapsibleSubSubsection(subsubsection) {
   // Create sub-subsection content wrapper
   const contentDiv = document.createElement("div");
   contentDiv.className = "subsubsection-content";
+  contentDiv.style.maxHeight = "0"; // Start collapsed
 
   const innerDiv = document.createElement("div");
   innerDiv.className = "subsubsection-inner";

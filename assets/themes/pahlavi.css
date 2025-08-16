@@ -1,0 +1,602 @@
+/* ===== COLLAPSIBLE SYLLABUS STYLES - PAHLAVI THEME =====
+   Rich earth and teal color palette inspired by Persian art and textiles
+   Designed to work with hierarchical content structure:
+   - .section = main collapsible sections (## headings in markdown)
+   - .subsection = nested collapsible sections (### headings in markdown)
+   - .session = individual content blocks (#### headings in markdown)
+*/
+
+/* ===== COLOR PALETTE =====
+   Primary: #102f3c (Deep Teal) - main headers and accents
+   Secondary: #014a50 (Dark Teal) - deeper elements and hover states
+   Warm: #b85420 (Burnt Orange) - highlights and important elements
+   Medium: #894128 (Clay Brown) - secondary warm elements
+   Neutral: #573333 (Dark Brown) - text and subtle elements
+   Backgrounds: #ffffff, #faf9f7, #f4f2f0 (warm whites and creams)
+*/
+
+/* ===== RESET & BASE STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Crimson Text", "Times New Roman", serif;
+    line-height: 1.65;
+    color: #573333;
+    background: linear-gradient(135deg, #102f3c 0%, #014a50 100%);
+    min-height: 100vh;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 0 30px rgba(16, 47, 60, 0.4);
+    min-height: 100vh;
+    border-left: 4px solid #b85420;
+    border-right: 4px solid #b85420;
+}
+
+/* ===== HEADER STYLES ===== */
+header {
+    background: linear-gradient(135deg, #102f3c 0%, #014a50 100%);
+    color: #ffffff;
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 20px,
+        rgba(184, 84, 32, 0.1) 20px,
+        rgba(184, 84, 32, 0.1) 22px
+    );
+    pointer-events: none;
+}
+
+h1 {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    font-style: italic;
+    color: #f4f2f0;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== CONTENT WRAPPER ===== */
+.content {
+    padding: 2.5rem;
+    background: #faf9f7;
+}
+
+/* ===== MAIN COLLAPSIBLE SECTIONS (## headings) ===== */
+.section {
+    margin-bottom: 2rem;
+    border: 2px solid #b85420;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(184, 84, 32, 0.15);
+}
+
+/* Section headers - clickable to expand/collapse */
+.section-header {
+    background: linear-gradient(135deg, #b85420 0%, #894128 100%);
+    color: #ffffff;
+    padding: 1.5rem 2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.section-header:hover {
+    background: linear-gradient(135deg, #894128 0%, #573333 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(184, 84, 32, 0.3);
+}
+
+.section-header.active {
+    background: linear-gradient(135deg, #102f3c 0%, #014a50 100%);
+    border-bottom: 3px solid #b85420;
+}
+
+/* Toggle icon (▼/▲) in section headers */
+.toggle-icon {
+    font-size: 1.3rem;
+    transition: transform 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.section-header.active .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Collapsible content area for sections */
+.section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #ffffff;
+}
+
+/* When active class is added, content expands */
+.section-content.active {
+    transition: max-height 0.5s ease-in;
+}
+
+.section-inner {
+    padding: 2rem;
+    background: linear-gradient(to bottom, #ffffff 0%, #faf9f7 100%);
+}
+
+/* ===== NESTED COLLAPSIBLE SUBSECTIONS (### headings) ===== */
+.subsection {
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #894128;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f4f2f0;
+    box-shadow: 0 2px 4px rgba(87, 51, 51, 0.1);
+}
+
+/* Subsection headers - lighter styling than main sections */
+.subsection-header {
+    background: linear-gradient(135deg, #f4f2f0 0%, #faf9f7 100%);
+    color: #573333;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #894128;
+}
+
+.subsection-header:hover {
+    background: linear-gradient(135deg, #894128 0%, #b85420 100%);
+    color: #ffffff;
+    transform: translateX(5px);
+}
+
+.subsection-header.active {
+    background: linear-gradient(135deg, #102f3c 0%, #014a50 100%);
+    color: #ffffff;
+    border-bottom: 2px solid #b85420;
+}
+
+/* Collapsible content for subsections */
+.subsection-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.subsection-content.active {
+    transition: max-height 0.4s ease-in;
+}
+
+.subsection-inner {
+    padding: 1.5rem;
+    background: #ffffff;
+    border-left: 3px solid #b85420;
+    margin-left: 1rem;
+}
+
+/* ===== SUB-SUBSECTION STYLES (#### headings) ===== */
+.subsubsection {
+    margin-bottom: 1rem;
+    border-left: 3px solid #102f3c;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-left: 1rem;
+    background: #faf9f7;
+}
+
+/* Sub-subsection headers - even lighter styling */
+.subsubsection-header {
+    background: #f4f2f0;
+    color: #573333;
+    padding: 0.8rem 1.2rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #e0ddd8;
+}
+
+.subsubsection-header:hover {
+    background: #102f3c;
+    color: #ffffff;
+    border-bottom-color: #b85420;
+}
+
+.subsubsection-header.active {
+    background: linear-gradient(135deg, #014a50 0%, #102f3c 100%);
+    color: #ffffff;
+    border-bottom: 2px solid #b85420;
+}
+
+/* Collapsible content for sub-subsections */
+.subsubsection-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.subsubsection-content.active {
+    transition: max-height 0.4s ease-in;
+}
+
+.subsubsection-inner {
+    padding: 1.2rem;
+    background: #ffffff;
+    border-left: 2px solid #894128;
+    margin-left: 0.5rem;
+}
+
+/* ===== CONTENT BLOCKS (##### headings) ===== */
+.session {
+    margin-bottom: 1.2rem;
+    padding: 1.2rem;
+    background: #ffffff;
+    border: 1px solid #e0ddd8;
+    border-left: 4px solid #b85420;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(184, 84, 32, 0.1);
+    transition: all 0.3s ease;
+}
+
+.session:hover {
+    border-left-color: #102f3c;
+    box-shadow: 0 4px 8px rgba(16, 47, 60, 0.15);
+    transform: translateX(3px);
+}
+
+.session h4, .session h5 {
+    color: #102f3c;
+    margin-bottom: 0.7rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.session-type {
+    font-weight: bold;
+    color: #b85420;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+/* ===== SPECIALIZED CONTENT STYLES ===== */
+.core-questions {
+    background: linear-gradient(135deg, #f4f2f0 0%, #faf9f7 100%);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 6px solid #102f3c;
+    border-top: 1px solid #894128;
+    border-right: 1px solid #894128;
+    border-bottom: 1px solid #894128;
+}
+
+.core-questions h4 {
+    color: #014a50;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.deadlines {
+    background: linear-gradient(135deg, #fff5f0 0%, #ffeee6 100%);
+    border: 2px solid #b85420;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.deadlines::before {
+    content: '⚠️';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.2rem;
+}
+
+.deadlines h4 {
+    color: #894128;
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-card {
+    background: linear-gradient(135deg, #faf9f7 0%, #f4f2f0 100%);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-left: 5px solid #102f3c;
+    border-top: 1px solid #e0ddd8;
+    border-right: 1px solid #e0ddd8;
+    border-bottom: 1px solid #e0ddd8;
+    box-shadow: 0 3px 6px rgba(16, 47, 60, 0.1);
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    border-left-color: #b85420;
+    box-shadow: 0 5px 12px rgba(184, 84, 32, 0.2);
+    transform: translateY(-2px);
+}
+
+.info-card h4 {
+    color: #014a50;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.grade-distribution {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.grade-item {
+    background: linear-gradient(135deg, #102f3c 0%, #014a50 100%);
+    color: white;
+    padding: 0.8rem;
+    text-align: center;
+    border-radius: 6px;
+    font-weight: 600;
+    border: 2px solid #b85420;
+    transition: all 0.3s ease;
+}
+
+.grade-item:hover {
+    background: linear-gradient(135deg, #b85420 0%, #894128 100%);
+    transform: scale(1.05);
+}
+
+/* ===== LIST STYLING ===== */
+/* Reading lists with specific class */
+.reading-list {
+    margin-top: 1rem;
+    background: #f4f2f0;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 3px solid #894128;
+}
+
+.reading-list ul {
+    margin-left: 1.5rem;
+}
+
+.reading-list li {
+    margin-bottom: 0.5rem;
+    color: #573333;
+}
+
+.reading-list li::marker {
+    color: #b85420;
+}
+
+/* General lists in subsection content */
+.subsection-inner ul, .subsubsection-inner ul {
+    margin-left: 1.5rem;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.subsection-inner li, .subsubsection-inner li {
+    margin-bottom: 0.4rem;
+    color: #573333;
+}
+
+.subsection-inner li::marker, .subsubsection-inner li::marker {
+    color: #102f3c;
+}
+
+.subsection-inner ol, .subsubsection-inner ol {
+    margin-left: 1.5rem;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.subsection-inner ol li, .subsubsection-inner ol li {
+    margin-bottom: 0.4rem;
+}
+
+/* ===== LINKS ===== */
+a {
+    color: #102f3c;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #b85420;
+    border-bottom-color: #b85420;
+    text-shadow: 0 0 1px rgba(184, 84, 32, 0.3);
+}
+
+a:visited {
+    color: #014a50;
+}
+
+/* ===== NOTES AND MISC ===== */
+.note {
+    font-style: italic;
+    color: #894128;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #faf9f7 0%, #f4f2f0 100%);
+    border-radius: 6px;
+    border-left: 4px solid #102f3c;
+    border-top: 1px solid #e0ddd8;
+    border-right: 1px solid #e0ddd8;
+    border-bottom: 1px solid #e0ddd8;
+}
+
+/* ===== TEXT STYLING ===== */
+strong, b {
+    color: #102f3c;
+    font-weight: 600;
+}
+
+em, i {
+    color: #894128;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .container {
+        margin: 0;
+        box-shadow: none;
+        border-left: none;
+        border-right: none;
+    }
+
+    header {
+        padding: 2rem 1rem;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .content {
+        padding: 1.5rem;
+    }
+
+    .section-header {
+        padding: 1rem 1.2rem;
+        font-size: 1.2rem;
+    }
+
+    .subsection-header {
+        padding: 0.8rem 1rem;
+        font-size: 1.1rem;
+    }
+
+    .subsubsection-header {
+        padding: 0.6rem 0.8rem;
+        font-size: 1rem;
+    }
+
+    .subsubsection {
+        margin-left: 0.5rem;
+    }
+
+    .subsubsection-inner {
+        padding: 1rem;
+        margin-left: 0.25rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .grade-distribution {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .grade-item {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .container {
+        box-shadow: none;
+        border: none;
+    }
+
+    header {
+        background: #102f3c !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .section-header, .subsection-header, .subsubsection-header {
+        background: #f4f2f0 !important;
+        color: #573333 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .section-content, .subsection-content, .subsubsection-content {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .section-content.active, .subsection-content.active, .subsubsection-content.active {
+        display: block !important;
+    }
+    /* Last updated date styling */
+    /* Last updated date styling */
+.last-updated-wrapper {
+    background: #faf9f7;
+    padding: 0.5rem 2.5rem;
+    border-bottom: 1px solid #e0ddd8;
+}
+
+.last-updated {
+    font-size: 0.85rem;
+    font-style: italic !important;
+    color: #894128;
+    text-align: right;
+    opacity: 0.6;
+    font-family: "Crimson Text", "Times New Roman", serif;
+
+}
+}

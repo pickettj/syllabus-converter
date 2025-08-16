@@ -405,6 +405,22 @@ a:hover {
     font-weight: 500;
 }
 
+/* Last updated date styling */
+.last-updated-wrapper {
+    background: #ffffff;
+    padding: 0.5rem 2rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.last-updated {
+    font-size: 0.85rem;
+    font-style: italic !important;
+    color: #536872;
+    text-align: right;
+    opacity: 0.6;
+    font-family: "Georgia", serif;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .subsubsection {
