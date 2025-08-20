@@ -21,8 +21,13 @@
                 $endif$
             </header>
 
-            <!-- Last updated date - positioned after header but before content -->
+            <!-- Last updated date and PDF download - positioned after header but before content -->
             <div class="last-updated-wrapper">
+                $if(pdf-filename)$
+                <div class="download-link">
+                    <a href="$pdf-filename$" class="pdf-download">📄 Download PDF</a>
+                </div>
+                $endif$
                 <div class="last-updated">Last updated on $date$</div>
             </div>
 

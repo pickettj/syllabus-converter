@@ -57,11 +57,38 @@ h1 {
     font-style: italic;
 }
 
-/* ===== LAST UPDATED DATE STYLING ===== */
+/* ===== LAST UPDATED DATE AND DOWNLOAD STYLING ===== */
 .last-updated-wrapper {
     background: #ffffff;
     padding: 0.5rem 2rem;
     border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.download-link {
+    font-size: 0.85rem;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+}
+
+.pdf-download {
+    color: #36454f !important;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid transparent;
+    font-family: "Georgia", serif;
+}
+
+.pdf-download:hover {
+    color: #536872 !important;
+    border-bottom-color: #536872;
+    text-decoration: underline;
 }
 
 .last-updated {
@@ -74,6 +101,20 @@ h1 {
     font-weight: normal;
     margin: 0;
     padding: 0;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+    .last-updated-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .last-updated {
+        text-align: left;
+    }
 }
 
 /* ===== CONTENT WRAPPER ===== */

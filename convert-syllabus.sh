@@ -208,6 +208,7 @@ select_theme() {
 }
 
 # Function to convert markdown to HTML
+# Function to convert markdown to HTML
 convert_to_html() {
     local source_file="$1"
     local output_dir="$2"
@@ -215,6 +216,9 @@ convert_to_html() {
 
     echo -e "${BLUE}Converting markdown to HTML...${NC}"
 
+    # Generate PDF filename for the download link
+    local basename=$(basename "$source_file" .md)
+    local pdf_filename="${basename}.pdf"
 
     # Run pandoc with our custom template
     if pandoc "$source_file" \
@@ -223,6 +227,7 @@ convert_to_html() {
         --standalone \
         --toc \
         --toc-depth=3 \
+        --variable="pdf-filename:$pdf_filename" \
         --metadata-file=<(echo "date: $(date +'%B %d, %Y')"); then
 
         echo -e "${GREEN}✓ HTML generated: $output_file${NC}"
