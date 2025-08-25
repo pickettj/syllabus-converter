@@ -66,10 +66,10 @@ add_date_stamp_and_nav() {
     
     # Try to add back link to h1.title first (pandoc's header structure)
     if grep -q '<h1 class="title">' "$html_file"; then
-        sed -i.bak 's|<h1 class="title">\(.*\)</h1>|<h1 class="title">\1 <a href="index.html" class="back-link">← Back to Index</a></h1>|' "$html_file" && rm "${html_file}.bak"
+        sed -i.bak 's|<h1 class="title">\(.*\)</h1>|<h1 class="title">\1</h1><a href="index.html" class="back-link">← Back to Index</a>|' "$html_file" && rm "${html_file}.bak"
     else
-        # Fallback: add to any h1 tag
-        sed -i.bak 's|<h1[^>]*>\(.*\)</h1>|<h1>\1 <a href="index.html" class="back-link">← Back to Index</a></h1>|' "$html_file" && rm "${html_file}.bak"
+        # Fallback: add after any h1 tag
+        sed -i.bak 's|<h1[^>]*>\(.*\)</h1>|<h1>\1</h1><a href="index.html" class="back-link">← Back to Index</a>|' "$html_file" && rm "${html_file}.bak"
     fi
     
     # Add date stamp div before closing body tag
