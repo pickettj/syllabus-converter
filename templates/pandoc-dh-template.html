@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Course syllabus for Computational Methods in the Humanities - Digital Humanities at University of Pittsburgh"
+        />
+        <title>
+            $if(title)$Syllabus - $title$$else$Syllabus - Digital
+            Humanities$endif$
+        </title>
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" href="css/syllabus-styles.css" />
+        <link
+            href="https://fonts.googleapis.com/css?family=Assistant"
+            rel="stylesheet"
+        />
+        $for(css)$
+        <link rel="stylesheet" type="text/css" href="$css$" />
+        $endfor$ $if(math)$ $math$ $endif$ $for(header-includes)$
+        $header-includes$ $endfor$
+    </head>
+    <body>
+        <a href="#main-content" class="skip-link">Skip to main content</a>
+
+        <header>
+            <nav role="navigation" aria-label="Main navigation">
+                <a href="index.xhtml">Home</a>
+                <a href="syllabus.xhtml" aria-current="page">Syllabus</a>
+                <a href="description.xhtml">Policies</a>
+                <a href="projects.xhtml">Projects</a>
+                <!-- <a href="assignments.xhtml">Assignments</a> -->
+                <a
+                    href="http://dh.obdurodon.org/"
+                    target="_blank"
+                    rel="noopener"
+                    >Resources</a
+                >
+                <a href="https://bactriana.org" target="_blank" rel="noopener"
+                    >Bactriana</a
+                >
+            </nav>
+        </header>
+
+        <main id="main-content">
+            $if(title)$
+            <h1>$title$</h1>
+            $endif$
+
+            <!-- Last updated date and PDF download - positioned after main heading -->
+            <div class="last-updated-wrapper">
+                $if(pdf-filename)$
+                <div class="download-link">
+                    <a href="$pdf-filename$" class="pdf-download"
+                        >📄 Download PDF</a
+                    >
+                </div>
+                $endif$
+                <div class="last-updated">Last updated on $date$</div>
+            </div>
+
+            <div class="content">
+                <!-- Pandoc body content goes here -->
+                $body$
+            </div>
+        </main>
+
+        <!-- Load the interactive JavaScript -->
+        <script
+            type="text/javascript"
+            src="javascript/syllabus-interactive.js"
+        ></script>
+
+        <!-- Simple initialization script -->
+        <script type="text/javascript">
+            //<![CDATA[
+            document.addEventListener("DOMContentLoaded", function () {
+                console.log("DOM loaded, starting transformation...");
+                if (typeof transformPandocToCollapsible === "function") {
+                    transformPandocToCollapsible();
+                } else {
+                    console.error(
+                        "transformPandocToCollapsible function not found",
+                    );
+                }
+            });
+            //]]>
+        </script>
+
+        $for(include-after)$ $include-after$ $endfor$
+    </body>
+</html>
