@@ -55,6 +55,7 @@ show_help() {
     echo "  -t, --theme THEME   Specify theme directly (skips fuzzy search)"
     echo "  --no-pdf           Skip PDF generation"
     echo "  --open             Open output files after generation"
+    echo "  --git              Add, commit, and push changes to git from output directory"
     echo
     echo "Interactive mode (default):"
     echo "  - Uses fzf to select source file"
@@ -65,6 +66,7 @@ show_help() {
     echo "  $0                                    # Interactive mode"
     echo "  $0 -f source/russia.md -t blue-grey  # Specify file and theme"
     echo "  $0 --no-pdf --open                   # No PDF, open results"
+    echo "  $0 --git                              # Include git operations"
     exit 0
 }
 
@@ -78,6 +80,10 @@ check_dependencies() {
 
     if ! command -v fzf >/dev/null 2>&1; then
         missing_deps+=("fzf")
+    fi
+
+    if [ "$USE_GIT" = true ] && ! command -v git >/dev/null 2>&1; then
+        missing_deps+=("git")
     fi
 
     if [ ${#missing_deps[@]} -ne 0 ]; then
@@ -323,6 +329,74 @@ copy_assets() {
     return 0
 }
 
+# Function to handle git operations
+git_commit_and_push() {
+    local output_dir="$1"
+    local current_dir=$(pwd)
+    
+    echo -e "${BLUE}Performing git operations...${NC}"
+    
+    # Change to output directory
+    cd "$output_dir" || {
+        echo -e "${RED}✗ Failed to change to output directory: $output_dir${NC}"
+        return 1
+    }
+    
+    # Check if this is a git repository
+    if ! git rev-parse --git-dir > /dev/null 2>&1; then
+        echo -e "${YELLOW}⚠ Output directory is not a git repository${NC}"
+        echo -e "${YELLOW}  Skipping git operations${NC}"
+        cd "$current_dir"
+        return 0
+    fi
+    
+    # Generate timestamp for commit message
+    local timestamp=$(date +'%B %d, %Y at %I:%M %p')
+    local commit_message="Syllabus updated on $timestamp"
+    
+    # Add all changes
+    echo -e "${BLUE}Adding files to git...${NC}"
+    if git add .; then
+        echo -e "${GREEN}✓ Files added to git${NC}"
+    else
+        echo -e "${RED}✗ Failed to add files to git${NC}"
+        cd "$current_dir"
+        return 1
+    fi
+    
+    # Check if there are changes to commit
+    if git diff --staged --quiet; then
+        echo -e "${YELLOW}⚠ No changes to commit${NC}"
+        cd "$current_dir"
+        return 0
+    fi
+    
+    # Commit changes
+    echo -e "${BLUE}Committing changes...${NC}"
+    if git commit -m "$commit_message"; then
+        echo -e "${GREEN}✓ Changes committed: $commit_message${NC}"
+    else
+        echo -e "${RED}✗ Failed to commit changes${NC}"
+        cd "$current_dir"
+        return 1
+    fi
+    
+    # Push to remote
+    echo -e "${BLUE}Pushing to remote repository...${NC}"
+    if git push; then
+        echo -e "${GREEN}✓ Changes pushed to remote repository${NC}"
+    else
+        echo -e "${RED}✗ Failed to push to remote repository${NC}"
+        echo -e "${YELLOW}  Changes were committed locally but not pushed${NC}"
+        cd "$current_dir"
+        return 1
+    fi
+    
+    # Return to original directory
+    cd "$current_dir"
+    return 0
+}
+
 # Function to open generated files
 open_files() {
     local output_dir="$1"
@@ -347,6 +421,7 @@ OUTPUT_DIR=""
 THEME=""
 SKIP_PDF=false
 OPEN_FILES=false
+USE_GIT=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -371,6 +446,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --open)
             OPEN_FILES=true
+            shift
+            ;;
+        --git)
+            USE_GIT=true
             shift
             ;;
         *)
@@ -423,6 +502,9 @@ else
 fi
 
 echo -e "${GREEN}Theme: $THEME${NC}"
+if [ "$USE_GIT" = true ]; then
+    echo -e "${GREEN}Git operations: enabled${NC}"
+fi
 echo
 
 # Perform conversions
@@ -445,6 +527,11 @@ if ! copy_assets "$OUTPUT_DIR" "$THEME"; then
     exit 1
 fi
 
+# Perform git operations if requested
+if [ "$USE_GIT" = true ]; then
+    git_commit_and_push "$OUTPUT_DIR"
+fi
+
 # Open files if requested
 open_files "$OUTPUT_DIR" "$BASENAME"
 
@@ -456,3 +543,6 @@ if [ "$SKIP_PDF" = false ] && [ -f "$OUTPUT_DIR/${BASENAME}.pdf" ]; then
     echo -e "${BLUE}PDF: $OUTPUT_DIR/${BASENAME}.pdf${NC}"
 fi
 echo -e "${BLUE}Assets: syllabus-styles.css, syllabus-interactive.js${NC}"
+if [ "$USE_GIT" = true ]; then
+    echo -e "${BLUE}Git: Changes committed and pushed${NC}"
+fi
