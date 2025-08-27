@@ -23,7 +23,8 @@
 # ../dh_website/
 # ├── syllabus.xhtml
 # ├── css/
-# │   └── syllabus-styles.css
+# │   ├── style.css (from main site)
+# │   └── syllabus-styles.css (from theme)
 # └── javascript/
 #     └── syllabus-interactive.js
 
@@ -36,6 +37,9 @@ JS_FILE="$ASSETS_DIR/syllabus-interactive.js"
 
 # Fixed output directory for DH website
 OUTPUT_DIR="$SCRIPT_DIR/../dh_website"
+
+# Path to main site's style.css (assuming it's in the dh_website css directory)
+MAIN_STYLE_CSS="$OUTPUT_DIR/css/style.css"
 
 # Import user's fzf functions if available
 if [ -f "$HOME/.fzf_functions" ]; then
@@ -70,7 +74,8 @@ show_help() {
     echo "Output:"
     echo "  Always outputs to: ../dh_website/"
     echo "  XHTML file: ../dh_website/syllabus.xhtml"
-    echo "  CSS: ../dh_website/css/syllabus-styles.css"
+    echo "  Main CSS: ../dh_website/css/style.css"
+    echo "  Syllabus CSS: ../dh_website/css/syllabus-styles.css"
     echo "  JS: ../dh_website/javascript/syllabus-interactive.js"
     echo
     echo "Interactive mode (default):"
@@ -79,7 +84,7 @@ show_help() {
     echo
     echo "Examples:"
     echo "  $0                                    # Interactive mode"
-    echo "  $0 -f source/dh-syllabus.md -t blue-grey  # Specify file and theme"
+    echo "  $0 -f source/dh-syllabus.md -t dh    # Specify file and theme"
     echo "  $0 --no-pdf --open                   # No PDF, open results"
     echo "  $0 --git                              # Include git operations"
     exit 0
@@ -309,7 +314,16 @@ copy_assets() {
         return 1
     fi
 
-    # Copy and rename theme CSS to css subdirectory
+    # Check if main site's style.css exists, if not create a warning but continue
+    if [ ! -f "$MAIN_STYLE_CSS" ]; then
+        echo -e "${YELLOW}⚠ Main site style.css not found at: $MAIN_STYLE_CSS${NC}"
+        echo -e "${YELLOW}  The syllabus will use only the theme CSS${NC}"
+        echo -e "${YELLOW}  To fix: ensure the main website's style.css is in ../dh_website/css/${NC}"
+    else
+        echo -e "${GREEN}✓ Main site style.css found${NC}"
+    fi
+
+    # Copy and rename theme CSS to css subdirectory as syllabus-styles.css
     local css_target="$OUTPUT_DIR/css/syllabus-styles.css"
     if cp "$theme_file" "$css_target"; then
         echo -e "${GREEN}✓ Copied theme to: css/syllabus-styles.css${NC}"
@@ -513,7 +527,8 @@ echo
 echo -e "${GREEN}=== DH Conversion Complete! ===${NC}"
 echo -e "${GREEN}Files generated in: $OUTPUT_DIR${NC}"
 echo -e "${BLUE}XHTML: $OUTPUT_DIR/syllabus.xhtml${NC}"
-echo -e "${BLUE}CSS: $OUTPUT_DIR/css/syllabus-styles.css${NC}"
+echo -e "${BLUE}Main CSS: $OUTPUT_DIR/css/style.css${NC}"
+echo -e "${BLUE}Syllabus CSS: $OUTPUT_DIR/css/syllabus-styles.css${NC}"
 echo -e "${BLUE}JS: $OUTPUT_DIR/javascript/syllabus-interactive.js${NC}"
 if [ "$SKIP_PDF" = false ] && [ -f "$OUTPUT_DIR/${BASENAME}.pdf" ]; then
     echo -e "${BLUE}PDF: $OUTPUT_DIR/${BASENAME}.pdf${NC}"
