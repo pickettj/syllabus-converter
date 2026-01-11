@@ -147,7 +147,7 @@ create_index_page() {
 <h1 class="title">Course Policies</h1>
 </header>
 
-<p class="intro">Standard policies and information <a href="https://jamespickett.info/">James Pickett's courses</a>:</p>
+<p class="intro">Standard policies and information for <a href="https://jamespickett.info/">James Pickett's courses</a>, which assume and incorporate the policies and procedures provided by <a href="https://teaching.pitt.edu/resources-for-teaching/syllabus-checklist/">Pitt's Center for Teaching and Learning</a>.</p>
 
 <div class="policy-grid">
 EOF

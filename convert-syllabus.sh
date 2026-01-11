@@ -59,12 +59,19 @@ show_help() {
     echo
     echo "Interactive mode (default):"
     echo "  - Uses fzf to select source file"
-    echo "  - Uses fzf to select output directory"
     echo "  - Uses fzf to select theme"
+    echo "  - Automatically routes to theme-specific directories:"
+    echo "    • imperial-russia theme → ~/Projects/courses-bactriana/imperial-russia"
+    echo "    • central-asia theme    → ~/Projects/courses-bactriana/central-asia"
+    echo "    • islam theme           → ~/Projects/courses-bactriana/islam"
+    echo "    • Other themes          → Interactive directory selection"
+    echo "  - You can override automatic routing when prompted"
     echo
     echo "Examples:"
-    echo "  $0                                    # Interactive mode"
-    echo "  $0 -f source/russia.md -t blue-grey  # Specify file and theme"
+    echo "  $0                                    # Interactive mode with auto-routing"
+    echo "  $0 -f source/russia.md -t imperial-russia  # Auto-routes to imperial-russia dir"
+    echo "  $0 -t central-asia                   # Auto-routes to central-asia dir"
+    echo "  $0 -o /custom/path -t islam          # Override auto-routing"
     echo "  $0 --no-pdf --open                   # No PDF, open results"
     echo "  $0 --git                              # Include git operations"
     exit 0
@@ -479,18 +486,6 @@ fi
 
 echo -e "${GREEN}Source file: $SOURCE_FILE${NC}"
 
-# Get output directory (interactive or from command line)
-if [ -z "$OUTPUT_DIR" ]; then
-    OUTPUT_DIR=$(select_output_directory)
-else
-    if [ ! -d "$OUTPUT_DIR" ]; then
-        echo -e "${YELLOW}Creating output directory: $OUTPUT_DIR${NC}"
-        mkdir -p "$OUTPUT_DIR"
-    fi
-fi
-
-echo -e "${GREEN}Output directory: $OUTPUT_DIR${NC}"
-
 # Get theme (interactive or from command line)
 if [ -z "$THEME" ]; then
     THEME=$(select_theme)
@@ -502,6 +497,57 @@ else
 fi
 
 echo -e "${GREEN}Theme: $THEME${NC}"
+
+# Get output directory (interactive or from command line)
+# If not specified, apply theme-specific routing
+if [ -z "$OUTPUT_DIR" ]; then
+    # Define base courses directory
+    COURSES_BASE="$HOME/Projects/courses-bactriana"
+    
+    # Map themes to specific subdirectories
+    case "$THEME" in
+        imperial-russia)
+            DEFAULT_OUTPUT="$COURSES_BASE/imperial-russia"
+            ;;
+        central-asia)
+            DEFAULT_OUTPUT="$COURSES_BASE/central-asia"
+            ;;
+        islam)
+            DEFAULT_OUTPUT="$COURSES_BASE/islam"
+            ;;
+        *)
+            # For other themes, use interactive selection
+            DEFAULT_OUTPUT=""
+            ;;
+    esac
+    
+    # If we have a default output for this theme, use it (but allow override)
+    if [ -n "$DEFAULT_OUTPUT" ]; then
+        echo -e "${BLUE}Theme-specific default directory: $DEFAULT_OUTPUT${NC}"
+        read -p "Use this directory? (Y/n): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+            OUTPUT_DIR="$DEFAULT_OUTPUT"
+        else
+            OUTPUT_DIR=$(select_output_directory)
+        fi
+    else
+        OUTPUT_DIR=$(select_output_directory)
+    fi
+else
+    if [ ! -d "$OUTPUT_DIR" ]; then
+        echo -e "${YELLOW}Creating output directory: $OUTPUT_DIR${NC}"
+        mkdir -p "$OUTPUT_DIR"
+    fi
+fi
+
+# Create output directory if it doesn't exist
+if [ ! -d "$OUTPUT_DIR" ]; then
+    echo -e "${YELLOW}Creating output directory: $OUTPUT_DIR${NC}"
+    mkdir -p "$OUTPUT_DIR"
+fi
+
+echo -e "${GREEN}Output directory: $OUTPUT_DIR${NC}"
 if [ "$USE_GIT" = true ]; then
     echo -e "${GREEN}Git operations: enabled${NC}"
 fi

@@ -1,0 +1,539 @@
+/* ===== COLLAPSIBLE SYLLABUS STYLES - CENTRAL ASIA THEME =====
+   Turquoise and teal color palette for academic syllabi
+   Designed to work with hierarchical content structure:
+   - .section = main collapsible sections (## headings in markdown)
+   - .subsection = nested collapsible sections (### headings in markdown)
+   - .session = individual content blocks (#### headings in markdown)
+*/
+
+/* ===== COLOR PALETTE =====
+   Primary: #0D9276 (Deep Teal)
+   Secondary: #40A2E3 (Bright Blue)
+   Light: #BBE2EC (Light Sky Blue)
+   Backgrounds: #FFF6E9 (Cream), #ffffff
+*/
+
+/* ===== RESET & BASE STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6;
+    color: #0D9276;
+    background: linear-gradient(135deg, #BBE2EC 0%, #40A2E3 100%);
+    min-height: 100vh;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgba(13, 146, 118, 0.3);
+    min-height: 100vh;
+}
+
+/* ===== HEADER STYLES ===== */
+header {
+    background: linear-gradient(135deg, #0D9276 0%, #40A2E3 100%);
+    color: #ffffff;
+    padding: 2rem;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    font-style: italic;
+    font-weight: 300;
+}
+
+/* ===== LAST UPDATED DATE AND DOWNLOAD STYLING ===== */
+.last-updated-wrapper {
+    background: #FFF6E9;
+    padding: 0.5rem 2rem;
+    border-bottom: 1px solid #BBE2EC;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.download-link {
+    font-size: 0.85rem;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+}
+
+.pdf-download {
+    color: #0D9276 !important;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid transparent;
+    font-family: "Inter", sans-serif;
+}
+
+.pdf-download:hover {
+    color: #40A2E3 !important;
+    border-bottom-color: #40A2E3;
+    text-decoration: underline;
+}
+
+.last-updated {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #0D9276;
+    text-align: right;
+    opacity: 0.7;
+    font-family: "Inter", sans-serif;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+    .last-updated-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .last-updated {
+        text-align: left;
+    }
+}
+
+/* ===== CONTENT WRAPPER ===== */
+.content {
+    padding: 2rem;
+}
+
+/* ===== MAIN COLLAPSIBLE SECTIONS (## headings) ===== */
+.section {
+    margin-bottom: 1.5rem;
+    border: 1px solid #BBE2EC;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* Section headers - clickable to expand/collapse */
+.section-header {
+    background: linear-gradient(135deg, #40A2E3 0%, #BBE2EC 100%);
+    color: #ffffff;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.section-header:hover {
+    background: linear-gradient(135deg, #0D9276 0%, #40A2E3 100%);
+}
+
+.section-header.active {
+    background: linear-gradient(135deg, #0D9276 0%, #40A2E3 100%);
+}
+
+/* Toggle icon (▼/▲) in section headers */
+.toggle-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.section-header.active .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Collapsible content area for sections */
+.section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #ffffff;
+}
+
+/* When active class is added, content expands */
+.section-content.active {
+    transition: max-height 0.5s ease-in;
+}
+
+.section-inner {
+    padding: 1.5rem;
+}
+
+/* ===== NESTED COLLAPSIBLE SUBSECTIONS (### headings) ===== */
+.subsection {
+    margin-bottom: 1.5rem;
+    border-left: 3px solid #40A2E3;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Subsection headers - lighter styling than main sections */
+.subsection-header {
+    background: #FFF6E9;
+    color: #0D9276;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.subsection-header:hover {
+    background: #BBE2EC;
+    color: #0D9276;
+}
+
+.subsection-header.active {
+    background: #40A2E3;
+    color: #ffffff;
+}
+
+/* Collapsible content for subsections */
+.subsection-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.subsection-content.active {
+    transition: max-height 0.4s ease-in;
+}
+
+.subsection-inner {
+    padding: 1rem;
+    background: #ffffff;
+}
+
+/* ===== SUB-SUBSECTION STYLES (#### headings) ===== */
+.subsubsection {
+    margin-bottom: 1rem;
+    border-left: 2px solid #BBE2EC;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-left: 1rem;
+}
+
+/* Sub-subsection headers - even lighter styling */
+.subsubsection-header {
+    background: #FFF6E9;
+    color: #0D9276;
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #BBE2EC;
+}
+
+.subsubsection-header:hover {
+    background: #BBE2EC;
+}
+
+.subsubsection-header.active {
+    background: #0D9276;
+    color: #ffffff;
+}
+
+/* Collapsible content for sub-subsections */
+.subsubsection-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.subsubsection-content.active {
+    transition: max-height 0.4s ease-in;
+}
+
+.subsubsection-inner {
+    padding: 0.8rem;
+    background: #ffffff;
+}
+
+/* ===== CONTENT BLOCKS (##### headings) ===== */
+.session {
+    margin-bottom: 0.8rem;
+    padding: 0.8rem;
+    background: #ffffff;
+    border: 1px solid #BBE2EC;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(13, 146, 118, 0.08);
+}
+
+.session h4, .session h5 {
+    color: #40A2E3;
+    margin-bottom: 0.4rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.session-type {
+    font-weight: bold;
+    color: #0D9276;
+    margin-bottom: 0.3rem;
+}
+
+/* ===== SPECIALIZED CONTENT STYLES ===== */
+.core-questions {
+    background: #FFF6E9;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #40A2E3;
+}
+
+.core-questions h4 {
+    color: #0D9276;
+    margin-bottom: 0.5rem;
+}
+
+.deadlines {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.deadlines h4 {
+    color: #c53030;
+    margin-bottom: 0.5rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-card {
+    background: #FFF6E9;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #40A2E3;
+}
+
+.info-card h4 {
+    color: #0D9276;
+    margin-bottom: 0.5rem;
+}
+
+.grade-distribution {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.grade-item {
+    background: #40A2E3;
+    color: white;
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* ===== LIST STYLING ===== */
+/* Reading lists with specific class */
+.reading-list {
+    margin-top: 0.5rem;
+}
+
+.reading-list ul {
+    margin-left: 1.5rem;
+}
+
+.reading-list li {
+    margin-bottom: 0.3rem;
+}
+
+/* General lists in subsection content */
+.subsection-inner ul, .subsubsection-inner ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subsection-inner li, .subsubsection-inner li {
+    margin-bottom: 0.3rem;
+}
+
+.subsection-inner ol, .subsubsection-inner ol {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subsection-inner ol li, .subsubsection-inner ol li {
+    margin-bottom: 0.3rem;
+}
+
+/* ===== LINKS ===== */
+a {
+    color: #40A2E3;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0D9276;
+    text-decoration: underline;
+}
+
+/* ===== NOTES AND MISC ===== */
+.note {
+    font-style: italic;
+    color: #0D9276;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: #FFF6E9;
+    border-radius: 4px;
+}
+
+/* ===== TEXT STYLING ===== */
+strong, b {
+    color: #0D9276;
+    font-weight: 700;
+}
+
+em, i {
+    color: #40A2E3;
+}
+
+/* ===== PARAGRAPH SPACING ===== */
+p {
+    margin-bottom: 1rem;
+}
+
+p + p {
+    margin-top: 0.5rem;
+}
+
+/* Spacing within content areas */
+.section-inner p,
+.subsection-inner p,
+.subsubsection-inner p,
+.session p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+/* Extra spacing for paragraphs after headings */
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+    margin-top: 0.8rem;
+}
+
+/* Spacing between different content blocks */
+p + ul, p + ol, ul + p, ol + p {
+    margin-top: 0.8rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .container {
+        margin: 0;
+        box-shadow: none;
+    }
+
+    header {
+        padding: 1.5rem 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .last-updated-wrapper {
+        padding: 0.5rem 1rem;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .section-header {
+        padding: 0.8rem 1rem;
+        font-size: 1.1rem;
+    }
+
+    .subsubsection {
+        margin-left: 0.5rem;
+    }
+
+    .subsubsection-header {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.95rem;
+    }
+
+    .subsubsection-inner {
+        padding: 0.6rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .container {
+        box-shadow: none;
+        border: none;
+    }
+
+    header {
+        background: #0D9276 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .section-header, .subsection-header, .subsubsection-header {
+        background: #FFF6E9 !important;
+        color: #0D9276 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .section-content, .subsection-content, .subsubsection-content {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .section-content.active, .subsection-content.active, .subsubsection-content.active {
+        display: block !important;
+    }
+}

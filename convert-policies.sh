@@ -86,9 +86,10 @@ convert_file() {
     
     # Run pandoc with default settings + CSS (let pandoc extract title from first heading)
     if pandoc "$source_file" \
-        -o "$output_file" \
-        --standalone \
-        --css="policies.css"; then
+    -o "$output_file" \
+    --standalone \
+    --wrap=none \
+    --css="policies.css"; then
         
         # Add date stamp and navigation to the HTML file
         add_date_stamp_and_nav "$output_file"
