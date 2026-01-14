@@ -220,7 +220,27 @@ select_theme() {
     echo "$selected_theme"
 }
 
-# Function to convert markdown to HTML
+# Function to preprocess markdown for better list handling
+preprocess_markdown() {
+    local source_file="$1"
+    local temp_file="$2"
+    
+    # Use awk to insert blank lines before bullet points that directly follow non-blank lines
+    awk '
+    NR > 1 {
+        # Check if current line is a bullet point and previous line was non-blank and non-bullet
+        if ($0 ~ /^[[:space:]]*[-*+] / && prev_line != "" && prev_line !~ /^[[:space:]]*[-*+] /) {
+            print prev_line  # Print the previous line
+            print ""         # Then insert a blank line before the bullet
+        } else {
+            print prev_line  # Just print previous line normally
+        }
+    }
+    { prev_line = $0 }  # Store current line as previous for next iteration
+    END { if (NR > 0) print prev_line }  # Print the last line
+    ' "$source_file" > "$temp_file"
+}
+
 # Function to convert markdown to HTML
 convert_to_html() {
     local source_file="$1"
@@ -232,9 +252,16 @@ convert_to_html() {
     # Generate PDF filename for the download link
     local basename=$(basename "$source_file" .md)
     local pdf_filename="${basename}.pdf"
+    
+    # Create temporary file for preprocessed markdown
+    local temp_md=$(mktemp)
+    trap "rm -f $temp_md" EXIT
+    
+    # Preprocess the markdown to fix bullet point spacing
+    preprocess_markdown "$source_file" "$temp_md"
 
-    # Run pandoc with our custom template
-    if pandoc "$source_file" \
+    # Run pandoc with our custom template using preprocessed file
+    if pandoc "$temp_md" \
         -o "$output_file" \
         --template="$TEMPLATE_FILE" \
         --standalone \
@@ -244,9 +271,11 @@ convert_to_html() {
         --metadata-file=<(echo "date: $(date +'%B %d, %Y')"); then
 
         echo -e "${GREEN}✓ HTML generated: $output_file${NC}"
+        rm -f "$temp_md"
         return 0
     else
         echo -e "${RED}✗ Failed to generate HTML${NC}"
+        rm -f "$temp_md"
         return 1
     fi
 }
@@ -259,11 +288,18 @@ convert_to_pdf() {
     local pdf_file="$output_dir/${basename}.pdf"
 
     echo -e "${BLUE}Converting markdown to PDF...${NC}"
+    
+    # Create temporary file for preprocessed markdown
+    local temp_md=$(mktemp)
+    trap "rm -f $temp_md" EXIT
+    
+    # Preprocess the markdown to fix bullet point spacing
+    preprocess_markdown "$source_file" "$temp_md"
 
     # Check if BasicTeX is available
     if command -v pdflatex >/dev/null 2>&1; then
-        # Use LaTeX engine
-        if pandoc "$source_file" \
+        # Use LaTeX engine with preprocessed file
+        if pandoc "$temp_md" \
             -o "$pdf_file" \
             --pdf-engine=xelatex \
             --variable=geometry:margin=1in \
@@ -271,6 +307,7 @@ convert_to_pdf() {
             2>/dev/null; then
 
             echo -e "${GREEN}✓ PDF generated: $pdf_file${NC}"
+            rm -f "$temp_md"
             return 0
         fi
     fi
@@ -279,7 +316,7 @@ convert_to_pdf() {
     echo -e "${YELLOW}Falling back to HTML→PDF conversion...${NC}"
     local temp_html="$output_dir/temp_syllabus.html"
 
-    if pandoc "$source_file" \
+    if pandoc "$temp_md" \
         -o "$temp_html" \
         --standalone \
         --css="$HOME/.pandoc/default.css" \
@@ -300,12 +337,14 @@ convert_to_pdf() {
 
             if [ -f "$pdf_file" ] && [ -s "$pdf_file" ]; then
                 echo -e "${GREEN}✓ PDF generated: $pdf_file${NC}"
+                rm -f "$temp_md"
                 return 0
             fi
         fi
     fi
 
     echo -e "${YELLOW}⚠ PDF generation failed, but HTML was created successfully${NC}"
+    rm -f "$temp_md"
     return 1
 }
 
