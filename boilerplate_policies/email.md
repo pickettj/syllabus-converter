@@ -8,8 +8,8 @@ And it is important to give *good* email. At a bare minimum:
   - For instance, it is helpful to include course number and topic (e.g., "HIST 0753: Question about Assignment 2")
 - Open with a stodgy, formal greeting: "Dear [Professor Professorson](https://community-sitcom.fandom.com/wiki/Sean_Garrity)"
   - "Hello Professor Professorson," "Greetings," etc., is probably okay... but avoid "Hey dude."
-  - *Pro-tip*: if your instructor (or boss) responds to your salutation with their first name, you can address them that way going forward. (Remember: your instructors are   ̶i̶̶n̶̶s̶̶e̶̶c̶̶u̶̶r̶̶e̶̶ ̶a̶̶n̶̶d̶̶ ̶v̶̶a̶̶i̶̶n̶̶ justifiably proud of the achievements that gave them that doctorate, so err on the side of caution until they indicate otherwise.)
-- Remind your instructor who you are: e.g., "I'm [Abed Nadir](https://community-sitcom.fandom.com/wiki/Abed_Nadir) from your Tuesday/Thursday HIST 0753 'Conspiracy Theories & Interior Design' (class."
+  - *Pro-tip*: if your instructor (or boss) responds to your salutation with their first name, you can address them that way going forward. (Remember: your instructors are   ̶i̶̶n̶̶s̶̶e̶̶c̶̶u̶̶r̶̶e̶̶ ̶a̶̶n̶̶d̶̶ ̶v̶̶a̶̶i̶̶n̶̶ justifiably proud of the achievements that earned them that doctorate, so err on the side of caution until they indicate otherwise.)
+- Remind your instructor who you are: e.g., "I'm [Abed Nadir](https://community-sitcom.fandom.com/wiki/Abed_Nadir) from your Tuesday/Thursday HIST 0753 'Conspiracy Theories & Interior Design' class."
   - Your instructors are interacting with hundreds of students each day. Plus they are old and broken and their backs hurt. Do them this kindness.
 - State your purpose clearly, getting to the point immediately.
   - It should be clear just from scanning through the email what the "ask" is, what the associated deadlines are, whether this is a time-sensitive email or one that can wait until the weekend.
